@@ -1,8 +1,7 @@
-import anthropic
 import json
 import re
+from config import client
 
-client = anthropic.Anthropic()
 
 test_set = [
     ("Our billing team will look into the charge and decide the outcome.", False),

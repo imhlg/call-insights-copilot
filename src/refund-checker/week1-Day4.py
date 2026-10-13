@@ -1,7 +1,4 @@
-import anthropic
-
-client = anthropic.Anthropic()
-
+from config import client
 history = []
 
 

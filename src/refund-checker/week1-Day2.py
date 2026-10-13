@@ -1,7 +1,5 @@
 import re
-import anthropic
-
-client = anthropic.Anthropic()
+from config import client
 
 """part 1"""
 # temperature was deprecated, so didnt work, commented below code

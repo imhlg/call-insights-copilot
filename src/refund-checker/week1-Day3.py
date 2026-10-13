@@ -1,8 +1,6 @@
-import anthropic
 import json
 import re
-
-client = anthropic.Anthropic()
+from config import client
 
 # system = """You are a call-summary assistant for a telecom contact center.
 # Reply with JSON only, no other text, using exactly these keys:
