@@ -1,18 +1,20 @@
-import anthropic
+import sys
+from pathlib import Path
 
-client = anthropic.Anthropic()
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "common"))
 
+from config import client
 """part-1"""
-# response = client.messages.create(
-#     model="claude-haiku-5-5",
-#     max_tokens=150,
-#     messages=[{"role": "user",
-#                "content": "Say hello and give one fact about contact centers."}]
-# )
+response = client.messages.create(
+    model="claude-haiku-5-5",
+    max_tokens=150,
+    messages=[{"role": "user",
+               "content": "Say hello and give one fact about contact centers."}]
+)
 
-# print(response.content[0].text)
-# print("\nInput tokens:", response.usage.input_tokens)
-# print("Output tokens:", response.usage.output_tokens)
+print(response.content[0].text)
+print("\nInput tokens:", response.usage.input_tokens)
+print("Output tokens:", response.usage.output_tokens)
 
 """part-2"""
 # response = client.messages.create(
