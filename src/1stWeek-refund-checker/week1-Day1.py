@@ -3,16 +3,16 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "common"))
 
-from config import client
+from llm_client import llm
 """part-1"""
-response = client.messages.create(
-    model="claude-haiku-5-5",
-    max_tokens=150,
+response = llm.complete(
+    task="default",
+    max_output_tokens=150,
     messages=[{"role": "user",
                "content": "Say hello and give one fact about contact centers."}]
 )
 
-print(response.content[0].text)
+print(response.text)
 print("\nInput tokens:", response.usage.input_tokens)
 print("Output tokens:", response.usage.output_tokens)
 

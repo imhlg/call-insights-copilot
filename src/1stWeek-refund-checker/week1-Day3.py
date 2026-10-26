@@ -4,7 +4,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "common"))
 
-from config import client
+from llm_client import llm
 from refund_checker import REFUND_CHECK_SYSTEM, flag_refund_promise
 
 # system = """You are a call-summary assistant for a telecom contact center.
@@ -91,13 +91,13 @@ sentences = [
 
 
 for s in sentences:
-    r = client.messages.create(
-        model="claude-haiku-5-5",
-        max_tokens=500,
+    r = llm.complete(
+        task="refund_check",
+        max_output_tokens=500,
         system=REFUND_CHECK_SYSTEM,
         messages=[{"role": "user", "content": s}],
     )
-    model_says = json.loads(r.content[-1].text)["promises_money_back"]
+    model_says = json.loads(r.text)["promises_money_back"]
     print(s, "-> model:", model_says, "| regex:", flag_refund_promise(s))
 
 

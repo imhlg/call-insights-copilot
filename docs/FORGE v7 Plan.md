@@ -1,0 +1,3 @@
+# FORGE v7: MAKER, FIELD and SHARPEN
+
+FORGE is the full plan: MAKER (19 Oct to 27 Dec 2026, AI PM ready), FIELD (28 Dec 2026 to 28 Feb 2027, hard stop, FDE ready) and SHARPEN (from March 2027: revision and exercises only, no new topics). Weeks 1 and 2 are done. **Primary goal:** Senior Technical, AI or Agentic AI PM by end of Dec 2026. **Second goal:** FDE-ready by March 2027, never at the cost of the 27 Dec gate.

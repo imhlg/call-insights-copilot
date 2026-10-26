@@ -1,0 +1,5 @@
+-r requirements.txt
+
+# Upcoming structured-output lesson and local routing tests.
+pydantic==2.12.5
+pytest==9.0.3

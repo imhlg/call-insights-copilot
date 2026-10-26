@@ -1,0 +1,8 @@
+---
+description: Explain failures in simple words and leave the code change to the user
+alwaysApply: true
+---
+
+Explain only. Do not write or edit code, and do not suggest fixes.
+If I ask "why does this fail?", explain the cause in simple words with a small example,
+but let me write the change myself.

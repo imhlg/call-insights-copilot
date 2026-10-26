@@ -4,8 +4,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "common"))
 
-from common.config import HK_MODEL
-from config import client, SONNET_MODEL
+from llm_client import llm
 from refund_checker import REFUND_CHECK_SYSTEM, flag_refund_promise
 
 
@@ -38,13 +37,13 @@ test_set = test_set + extra_tests
 
 
 def model_flag(sentence):
-    r = client.messages.create(
-        model=HK_MODEL,
-        max_tokens=500,
+    r = llm.complete(
+        task="refund_check",
+        max_output_tokens=500,
         system=REFUND_CHECK_SYSTEM,  # the stricter prompt from before
         messages=[{"role": "user", "content": sentence}],
     )
-    return json.loads(r.content[-1].text)["promises_money_back"]
+    return json.loads(r.text)["promises_money_back"]
 
 
 """How to read the code:

@@ -1,10 +1,33 @@
+# Day 6: structured triage of support replies with retries.
+#
+# What it does
+# - Sends each support message to the local K2 Horizon 7B model with a system prompt that demands
+#   ONLY JSON: {"is_refund_promise": true|false, "reason": "..."}.
+# - A refund promise means any commitment to give money back: cash, card
+#   reversal, bill credit, or a discount on a charge.
+# - parse_triage strips optional ```json fences, json.loads the text, then
+#   checks: is_refund_promise is a bool, and reason is a non-empty string.
+#   (Older category/urgency checks are commented out.)
+# - triage tries up to 3 times. It retries if the reply was cut off
+#   (stop_reason == "max_tokens") or the JSON/checks failed, and feeds the
+#   error back into the conversation. If every attempt fails, it returns None
+#   so a human can review that message.
+#
+# What the loop checks
+# - test_set pairs a support reply with the expected bool.
+# - For each pair it prints the message, the expected label, and the model JSON.
+# - FAILED: no valid JSON after all attempts.
+# - MISMATCH: valid JSON, but is_refund_promise != expected.
+# - OK: the model's bool matches the label.
+
+
 import json
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "common"))
 
-from config import client, HK_MODEL
+from llm_client import llm
 
 SYSTEM = """You triage customer support messages.
 A refund promise is any commitment to give the customer money back, in any form: cash, card reversal, bill credit, or a discount on a charge.
@@ -59,11 +82,6 @@ test_set = [
 ]
 
 
-def get_text(response) -> str:
-    # Lesson from Week 1: content is a LIST of blocks. Keep only the text ones.
-    return "".join(b.text for b in response.content if b.type == "text")
-
-
 def parse_triage(raw: str) -> dict:
     cleaned = raw.strip()
     if cleaned.startswith("```"):
@@ -87,13 +105,13 @@ def parse_triage(raw: str) -> dict:
 def triage(message: str, max_attempts: int = 3):
     messages = [{"role": "user", "content": message}]
     for attempt in range(1, max_attempts + 1):
-        response = client.messages.create(
-            model=HK_MODEL, max_tokens=1000, system=SYSTEM, messages=messages
+        response = llm.complete(
+            task="triage", max_output_tokens=1000, system=SYSTEM, messages=messages
         )
-        if response.stop_reason == "max_tokens":
+        if response.finish_reason == "length":
             print(f"attempt {attempt}: reply cut off, retrying")
             continue
-        raw = get_text(response)
+        raw = response.text
         try:
             return parse_triage(raw)
         except ValueError as err:

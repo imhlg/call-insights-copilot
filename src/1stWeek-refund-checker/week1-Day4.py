@@ -3,19 +3,19 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "common"))
 
-from config import client
+from llm_client import llm
 history = []
 
 
 def ask(user_text):
     history.append({"role": "user", "content": user_text})
-    response = client.messages.create(
-        model="claude-sonnet-5-5",
-        max_tokens=300,
+    response = llm.complete(
+        task="reason",
+        max_output_tokens=300,
         system="You are a concise telecom support assistant.",
         messages=history,
     )
-    reply = response.content[-1].text
+    reply = response.text
     history.append({"role": "assistant", "content": reply})
     print("Input tokens:", response.usage.input_tokens)
     return reply
